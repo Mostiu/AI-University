@@ -1,5 +1,5 @@
 import copy
-from const import PLAYER1_START_POSITIONS, PLAYER2_START_POSITIONS, DIRECTIONS
+from const import P1_START_POSITIONS, P2_START_POSITIONS, DIRECTIONS
 
 
 class Board:
@@ -25,11 +25,9 @@ class Board:
             raise ValueError('Invalid position')
 
     def init_board(self):
-        for pos in PLAYER1_START_POSITIONS:
+        for pos in P1_START_POSITIONS:
             self.add_pawn(pos[0], pos[1], True)
-            # self.add_pawn(self.BOARD_SIZE - 1 -
-            #               pos[0], self.BOARD_SIZE - 1 - pos[1], False)
-        for pos in PLAYER2_START_POSITIONS:
+        for pos in P2_START_POSITIONS:
             self.add_pawn(pos[0], pos[1], False)
 
     def move_pawn(self, row, col, new_row, new_col):
@@ -87,8 +85,7 @@ class Board:
             elif self.board[new_row][new_col] == 0:
                 continue
             else:
-                jump_row, jump_col = new_row + \
-                    direction[0], new_col + direction[1]
+                jump_row, jump_col = new_row + direction[0], new_col + direction[1]
                 if 0 <= jump_row < self.BOARD_SIZE and 0 <= jump_col < self.BOARD_SIZE:
                     if self.board[jump_row][jump_col] == 0 and (jump_row, jump_col) not in visited:
                         moves.append((jump_row, jump_col))
@@ -103,11 +100,11 @@ class Board:
     def is_game_over(self):
         isPlayer1Win = True
         isPlayer2Win = True
-        for pos in PLAYER1_START_POSITIONS:
+        for pos in P1_START_POSITIONS:
             if self.board[pos[0]][pos[1]] != 2:
                 isPlayer2Win = False
                 break
-        for pos in PLAYER2_START_POSITIONS:
+        for pos in P2_START_POSITIONS:
             if self.board[pos[0]][pos[1]] != 1:
                 isPlayer1Win = False
                 break

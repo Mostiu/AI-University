@@ -1,6 +1,5 @@
 from game import Board
-from strategies import Heuristics
-from time import time
+
 
 
 def minimax(board: Board, depth: int, maximizing: bool, player: int, eval_func) -> float:
@@ -15,7 +14,6 @@ def minimax(board: Board, depth: int, maximizing: bool, player: int, eval_func) 
         best_move = None
         max_eval = -float('inf')
         for pawn, move in board.get_all_possible_moves().items():
-            # pawn (row, col), move [(new_row, new_col), ...]
             for new_row, new_col in move:
                 if not best_move:
                     best_move = (pawn, (new_row, new_col))

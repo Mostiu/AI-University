@@ -1,23 +1,18 @@
 import math
 from random import random
 from game import Board
-from const import DIRECTIONS, PLAYER1_START_POSITIONS, PLAYER2_START_POSITIONS
+from const import DIRECTIONS, P1_START_POSITIONS, P2_START_POSITIONS
 
 
-class Heuristics:
+class Strategies:
     @staticmethod
     def random(board: Board, player: int):
         return random()
 
     @staticmethod
     def dist_from_oponent_corner(board: Board, player: int):
-        # These are good
         MAX_DIST = 365
         MIN_DIST = 50
-
-        # These are for tests only
-        # MAX_DIST = 7
-        # MIN_DIST = 125
         corner = (0, 0) if player == 1 else (15, 15)
         result = 0
         for row in range(16):
@@ -53,9 +48,6 @@ class Heuristics:
 
     @staticmethod
     def single_pawn_distance(board: Board, player: int):
-        # MAX_DIST = 140
-        # MIN_DIST = 43
-        # 43 - 140
         corner = (0, 0) if player == 1 else (15, 15)
         distances = []
         for row in range(16):
@@ -75,8 +67,7 @@ class Heuristics:
             for col in range(board_size):
                 if board.board[row][col] == player:
                     for direction in DIRECTIONS:
-                        new_row, new_col = row + \
-                            direction[0], col + direction[1]
+                        new_row, new_col = row + direction[0], col + direction[1]
                         if not (0 <= new_row < board_size and 0 <= new_col < board_size):
                             continue
                         elif board.board[new_row][new_col] == 0:
@@ -85,7 +76,6 @@ class Heuristics:
 
     @staticmethod
     def pawns_position_close_to_center(board: Board, player: int):
-        # 19 - 143
         MIN_RESULT = 19
         MAX_RESULT = 143
         board_size = 16
@@ -133,12 +123,12 @@ class Heuristics:
     def no_pawns_at_finish(board: Board, player: int):
         result = 0
         if player == 1:
-            for pos in PLAYER2_START_POSITIONS:
+            for pos in P2_START_POSITIONS:
                 if board.board[pos[0]][pos[1]] == player:
                     result += 1
             return result / 19
         elif player == 2:
-            for pos in PLAYER1_START_POSITIONS:
+            for pos in P1_START_POSITIONS:
                 if board.board[pos[0]][pos[1]] == player:
                     result += 1
             return result / 19
@@ -149,12 +139,12 @@ class Heuristics:
     def no_pawns_at_start(board: Board, player: int):
         result = 0
         if player == 1:
-            for pos in PLAYER1_START_POSITIONS:
+            for pos in P1_START_POSITIONS:
                 if board.board[pos[0]][pos[1]] == player:
                     result += 1
             return -(result / 19)
         elif player == 2:
-            for pos in PLAYER2_START_POSITIONS:
+            for pos in P2_START_POSITIONS:
                 if board.board[pos[0]][pos[1]] == player:
                     result += 1
             return -(result / 19)
@@ -169,8 +159,7 @@ class Heuristics:
                 if board.board[row][col] == player:
                     isAlone = True
                     for direction in DIRECTIONS:
-                        new_row, new_col = row + \
-                            direction[0], col + direction[1]
+                        new_row, new_col = row + direction[0], col + direction[1]
                         if not (0 <= new_row < 16 and 0 <= new_col < 16):
                             continue
                         elif board.board[new_row][new_col] == player:
@@ -183,26 +172,16 @@ class Heuristics:
     @staticmethod
     def complex(board: Board, player: int):
         result = 0
-        result += Heuristics.dist_from_oponent_corner(board, player)
-        result += Heuristics.no_pawns_at_finish(board, player)
-        result += Heuristics.no_isolated_pawns(board, player) * 0.1
-        result += Heuristics.no_pawns_at_start(board, player) * 0.1
-        result -= Heuristics.no_pawns_on_edge(board, player) * 0.01
-        return result
-
-    @staticmethod
-    def complex2(board: Board, player: int):
-        result = 0
-        result += Heuristics.dist_from_oponent_corner(board, player)
-        result += Heuristics.no_pawns_at_finish(board, player)
-        result += Heuristics.no_isolated_pawns(board, player) * 0.1
-        result += Heuristics.no_pawns_at_start(board, player) * 0.1
-        result -= Heuristics.no_pawns_on_edge(board, player) * 0.01
+        result += Strategies.dist_from_oponent_corner(board, player)
+        result += Strategies.no_pawns_at_finish(board, player)
+        result += Strategies.no_isolated_pawns(board, player) * 0.1
+        result += Strategies.no_pawns_at_start(board, player) * 0.1
+        result -= Strategies.no_pawns_on_edge(board, player) * 0.01
         return result
 
     @staticmethod
     def halfrandom(board, player):
         result = 0
-        result += Heuristics.random(board, player)
-        result += Heuristics.no_pawns_at_start(board, player)
+        result += Strategies.random(board, player)
+        result += Strategies.no_pawns_at_start(board, player)
         return result
